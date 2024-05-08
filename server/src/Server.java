@@ -1,7 +1,3 @@
-package TCP.server;
-
-import TCP.intefaces.Executable;
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -24,11 +20,17 @@ public class Server extends Thread {
 
         try {
             this.serverSocket = new ServerSocket(port);
-            System.out.println("Metro Server started");
+            System.out.println("Server started");
             while (!isStopped) {
                 System.out.println("New Client Waiting...");
                 Socket clientSocket = serverSocket.accept();
                 ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
+
+                String classFile = (String) in.readObject();
+                classFile = classFile.replaceFirst("client", "server");
+                byte[] b = (byte[]) in.readObject();
+                FileOutputStream fos = new FileOutputStream(classFile);
+                fos.write(b);
 
                 Executable ex = (Executable) in.readObject();
                 double startTime = System.nanoTime();
@@ -37,6 +39,14 @@ public class Server extends Thread {
                 double completionTime = endTime - startTime;
                 ResultImpl r = new ResultImpl(output, completionTime);
                 ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
+
+                classFile = "out/production/server/ResultImpl.class";
+                System.out.println(r.output);
+                out.writeObject(classFile);
+                FileInputStream fis = new FileInputStream(classFile);
+                byte[] bo = new byte[fis.available()];
+                fis.read(bo);
+                out.writeObject(bo);
 
                 out.writeObject(r);
                 out.flush();

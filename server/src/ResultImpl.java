@@ -1,10 +1,7 @@
-package TCP.server;
-
-import TCP.intefaces.Result;
-
 import java.io.Serializable;
 
 public class ResultImpl implements Result, Serializable {
+    private static final long serialVersionUID = 1L;
     Object output;
     double scoreTime;
     public ResultImpl(Object o, double c) {
