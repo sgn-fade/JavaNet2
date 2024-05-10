@@ -3,7 +3,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server extends Thread {
-    //MetroCardBank bank;
     private ServerSocket serverSocket = null;
     private final int port;
     private boolean isStopped;
